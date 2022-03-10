@@ -1,0 +1,100 @@
+import React, { useState } from 'react';
+import axios from "axios";
+import './Register.css'
+import '../../App.css';
+import {Button, Divider, TextField} from '@material-ui/core'
+import { Link, useHistory } from 'react-router-dom'
+import PersonAddIcon from '@material-ui/icons/PersonAdd'
+
+const Register = ({onRegister}) => {
+
+  const history = useHistory();
+
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+  const [entryNo,setEntryNo] = useState('');
+  const [otp,setOtp] = useState('');
+  const [showOtp,setShowOtp] = useState(false);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    const config = {
+      headers:{
+        "Content-Type":"application/json"
+      }
+    }
+
+    if(showOtp){
+      const confirmOtp = async()=>{
+        try {
+          const {data} = await axios.post("/api/users/register/otp",{email,entryNo,password,otp},config);
+          onRegister(data);
+        } catch (error) {
+          console.log(error.message);
+          return;
+        }
+      }
+      confirmOtp()
+      setShowOtp(false);
+      history.push('/confirm')
+      return;
+    }
+
+    const getOtp = async()=>{
+      try {
+        await axios.post("/api/users/register",{email,entryNo,password},config);
+        setShowOtp(true);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+
+    getOtp();
+  }
+
+  return (
+    <div>
+      <div className='icon'>
+        <div className='icon_class'>
+          <PersonAddIcon fontSize='large' />
+        </div>
+        <div className='text'>Sign up</div>
+      </div>
+
+      <div className='row m-2'>
+        {showOtp ?
+        <div className='p-2'>
+          <TextField id="otp" className='p-2' type='text' variant='outlined' label='Enter OTP' fullWidth onChange={(e)=>setOtp(e.target.value)}/>
+        </div>
+         :
+         <>
+          <div className='p-2'>
+            <TextField id="email" className='p-2' type='email' variant='outlined' label='Enter Email' fullWidth onChange={(e)=>setEmail(e.target.value)}/>
+          </div>
+          <div className='p-2'>
+            <TextField id="entryNumber" className='p-2' type='text' variant='outlined' label='Enter Entry Number' fullWidth onChange={(e)=>setEntryNo(e.target.value)}/>
+          </div>
+          <div className='p-2'>
+            <TextField id="password" className='p-2' type='password' variant='outlined' label='Enter Password' fullWidth onChange={(e)=>setPassword(e.target.value)}/> 
+          </div>
+        </>
+        }
+
+        <div className='p-2' style={{textAlign:'center'}}>
+          <Button variant='contained' color='primary' onClick={submitHandler}>Create Account</Button>
+        </div>
+      </div>
+
+      <Divider variant='middle'/>
+      <p className='text-center'>
+        <Link to="/login" className='text-black-50'>
+          <h5>Already have an Account?</h5>
+        </Link>
+      </p>
+
+    </div>
+  )
+}
+
+export default Register
