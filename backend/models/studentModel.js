@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const asyncHandler = require('express-async-handler');
 
 const bcrypt = require("bcryptjs")
 
@@ -47,6 +48,10 @@ const studentSchema = mongoose.Schema(
         otp:{
             type:String,
             required:false
+        },
+        DOB:{
+            type:String,
+            required:true
         }
     }
 )
@@ -59,17 +64,19 @@ studentSchema.pre('save',async function(next){
     this.password = await bcrypt.hash(this.password,salt);
 })
 
-studentSchema.statics.findByCredentials = async(email,password) => {
-    const student = await Student.findOne({email})
+studentSchema.statics.findByCredentials = async(entryNumber,password,res) => {
+    const student = await Student.findOne({entryNumber})
 
     if(!student){
+        res.status(400);
         throw new Error('Unable to find such student');
     }
 
     const isMatch = await bcrypt.compare(password,student.password)
 
     if(!isMatch){
-        throw new Error("Stop illegal things!!!")
+        res.status(400);
+        throw new Error("Password is wrong!!!")
     }
 
     return student

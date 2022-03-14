@@ -5,6 +5,7 @@ import '../../App.css';
 import {Button, Divider, TextField} from '@material-ui/core'
 import { Link, useHistory } from 'react-router-dom'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import ErrorMessage from '../../parts/ErrorMessage';
 
 const Register = ({onRegister}) => {
 
@@ -15,6 +16,8 @@ const Register = ({onRegister}) => {
   const [entryNo,setEntryNo] = useState('');
   const [otp,setOtp] = useState('');
   const [showOtp,setShowOtp] = useState(false);
+  const [showPass,setShowPass]=useState(false);
+  const [error,setError] = useState(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -25,27 +28,49 @@ const Register = ({onRegister}) => {
       }
     }
 
+    if(showPass){
+      const passwordChange = async()=>{
+        try {
+          const {data} = await axios.post("/api/users/register/password",{email,entryNumber:entryNo,password,otp},config);
+          onRegister(data);
+        } catch (error) {
+          setError(error.response.data.message);
+          return;
+        }
+      }
+
+      passwordChange();
+      setShowPass(false);
+      history.push('/confirm')
+      return;
+    }
+
     if(showOtp){
       const confirmOtp = async()=>{
         try {
-          const {data} = await axios.post("/api/users/register/otp",{email,entryNo,password,otp},config);
-          onRegister(data);
+          const {data} = await axios.post("/api/users/register/otp",{email,entryNumber:entryNo,password,otp},config);
+          //onRegister(data);
         } catch (error) {
+          setError(error.response.data.message)
           console.log(error.message);
           return;
         }
       }
       confirmOtp()
       setShowOtp(false);
-      history.push('/confirm')
+      setShowPass(true);
+      //history.push('/confirm')
       return;
     }
 
     const getOtp = async()=>{
       try {
-        await axios.post("/api/users/register",{email,entryNo,password},config);
+        const data = await axios.post("/api/users/register",{email,entryNumber:entryNo,password},config);
+        console.log(data);
+        setPassword('');
         setShowOtp(true);
       } catch (error) {
+        setError(error.response.data.message);
         console.log(error.message);
       }
     }
@@ -63,12 +88,18 @@ const Register = ({onRegister}) => {
       </div>
 
       <div className='row m-2'>
-        {showOtp ?
+        {error && 
+          <div className='p-2'>
+            <ErrorMessage variant='danger'>{error}</ErrorMessage>
+          </div>
+        }
+        {showOtp &&
         <div className='p-2'>
           <TextField id="otp" className='p-2' type='text' variant='outlined' label='Enter OTP' fullWidth onChange={(e)=>setOtp(e.target.value)}/>
         </div>
-         :
-         <>
+        }
+        {!showPass && !showOtp &&
+        <>
           <div className='p-2'>
             <TextField id="email" className='p-2' type='email' variant='outlined' label='Enter Email' fullWidth onChange={(e)=>setEmail(e.target.value)}/>
           </div>
@@ -79,6 +110,12 @@ const Register = ({onRegister}) => {
             <TextField id="password" className='p-2' type='password' variant='outlined' label='Enter Password' fullWidth onChange={(e)=>setPassword(e.target.value)}/> 
           </div>
         </>
+        }
+
+        {showPass && 
+        <div className='p-2'>
+          <TextField id="password" className='p-2' type='password' variant='outlined' label='Enter New Password' fullWidth onChange={(e)=>setPassword(e.target.value)}/> 
+        </div>
         }
 
         <div className='p-2' style={{textAlign:'center'}}>

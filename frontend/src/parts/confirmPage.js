@@ -1,5 +1,6 @@
 import { Button, Divider, TextField } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
+import './confirmPage.css';
 import { Link, useHistory } from 'react-router-dom';
 
 const ConfirmPage = ({student}) => {
@@ -38,28 +39,63 @@ const ConfirmPage = ({student}) => {
       </div>
 
       <div className='row m-2'>
-        <div className='p-2'>
-            <TextField id="name" className='p-2' type='text' variant='outlined' label='Enter Name' fullWidth onChange={(e)=>setName(e.target.value)} value={name}/>
+        
+        <div className='flexer'>
+            <div className='p-2 left'>
+                <TextField id="name" className='p-2' type='text' variant='outlined' label='Name' fullWidth onChange={(e)=>setName(e.target.value)} value={name} disabled/>
+            </div>
+            <div className='p-2 right' style={{textAlign:'center'}}>
+                <Button variant='contained' color="secondary" onClick={submitHandler}>Report</Button>
+            </div>
         </div>
-        <div className='p-2'>
-            <TextField id="email" className='p-2' type='email' variant='outlined' label='Enter Email' fullWidth onChange={(e)=>setEmail(e.target.value)} value={email}/>
+        <div className='flexer'>
+            <div className='p-2 left'>
+                <TextField id="email" className='p-2' type='email' variant='outlined' label='Email' fullWidth onChange={(e)=>setEmail(e.target.value)} value={email} disabled/>
+            </div>
+            <div className='p-2 right' style={{textAlign:'center'}}>
+                <Button variant='contained' color="secondary" onClick={submitHandler}>Report</Button>
+            </div>
         </div>
-        <div className='p-2'>
-            <TextField id="entryNumber" className='p-2' type='text' variant='outlined' label='Enter Entry Number' fullWidth onChange={(e)=>setEntryNo(e.target.value)} value={entryNo}/>
+        <div className='flexer'>
+            <div className='p-2 left'>
+                <TextField id="entryNumber" className='p-2' type='text' variant='outlined' label='Entry Number' fullWidth onChange={(e)=>setEntryNo(e.target.value)} value={entryNo} disabled/>
+            </div>
+            <div className='p-2 right' style={{textAlign:'center'}}>
+                <Button variant='contained' color="secondary" onClick={submitHandler}>Report</Button>
+            </div>
         </div>
-        <div className='p-2'>
-            <TextField id="phone" className='p-2' type='text' variant='outlined' label='Enter your Phone Number' fullWidth onChange={(e)=>setPhone(e.target.value)} value={phone}/> 
+        <div className='flexer'>
+            <div className='p-2 left'>
+                <TextField id="phone" className='p-2' type='text' variant='outlined' label='your Phone Number' fullWidth onChange={(e)=>setPhone(e.target.value)} value={phone} disabled/> 
+            </div>
+            <div className='p-2 right' style={{textAlign:'center'}}>
+                <Button variant='contained' color="secondary" onClick={submitHandler}>Report</Button>
+            </div>
         </div>
-        <div className='p-2'>
-            <TextField id="parentPhone" className='p-2' type='text' variant='outlined' label='Enter Parents Phone Number' fullWidth onChange={(e)=>setParentPhone(e.target.value)} value={parentPhone}/> 
+        <div className='flexer'>
+            <div className='p-2 left'>
+                <TextField id="parentPhone" className='p-2' type='text' variant='outlined' label='Parents Phone Number' fullWidth onChange={(e)=>setParentPhone(e.target.value)} value={parentPhone} disabled/> 
+            </div>
+            <div className='p-2 right' style={{textAlign:'center'}}>
+                <Button variant='contained' color="secondary" onClick={submitHandler}>Report</Button>
+            </div>
         </div>
-        <div className='p-2'>
-            <TextField id="hostel" className='p-2' type='text' variant='outlined' label='Enter hostel Name' fullWidth onChange={(e)=>setHostel(e.target.value)} value={hostel}/> 
+        <div className='flexer'>
+            <div className='p-2 left'>
+                <TextField id="hostel" className='p-2' type='text' variant='outlined' label='hostel Name' fullWidth onChange={(e)=>setHostel(e.target.value)} value={hostel} disabled/> 
+            </div>
+            <div className='p-2 right' style={{textAlign:'center'}}>
+                <Button variant='contained' color="secondary" onClick={submitHandler}>Report</Button>
+            </div>
         </div>
-        <div className='p-2'>
-            <TextField id="phone" className='p-2' type='text' variant='outlined' label='Enter Phone' fullWidth onChange={(e)=>setRoom(e.target.value)} value={room}/> 
+        <div className='flexer'>
+            <div className='p-2 left'>
+                <TextField id="phone" className='p-2' type='text' variant='outlined' label='Room' fullWidth onChange={(e)=>setRoom(e.target.value)} value={room} disabled/> 
+            </div>
+            <div className='p-2 right' style={{textAlign:'center'}}>
+                <Button variant='contained' color="secondary" onClick={submitHandler}>Report</Button>
+            </div>
         </div>
-
         <div className='p-2' style={{textAlign:'center'}}>
           <Button variant='contained' color='primary' onClick={submitHandler}>Create Account</Button>
         </div>
