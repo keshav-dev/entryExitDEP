@@ -1,14 +1,23 @@
 import { Button } from '@material-ui/core'
 import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
-import './Home.css'
+import './Home.css';
+import {useHistory} from 'react-router-dom'
 
 const Home = ({student}) => {
+  const history = useHistory();
+  if(!student){
+    history.push('/landing')
+  }
     const [src,setSrc] = useState('');
     const [use,setUse] = useState(false);
 
     useEffect(()=>{
-        const studentStr = JSON.stringify(student)
+      const stud = {
+        id:student._id,
+        status:student.status
+      }
+        const studentStr = JSON.stringify(stud)
         QRCode.toDataURL(studentStr).then(setSrc);
     },[student])
 
@@ -28,7 +37,7 @@ const Home = ({student}) => {
     </div>
 
     <div style={{border:'1px solid black',margin:'1rem 0 0 0'}}>
-      {student.history.map((item)=>{
+      {student.history.slice(0).reverse().map((item)=>{
         return <div className='p-2' style={{textAlign:'center',padding:'2rem'}}>
           {`${item.entry} on ${item.date.substring(0,10)} at ${item.date.substring(11,19)}`}
         </div>

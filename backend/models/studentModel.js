@@ -52,6 +52,17 @@ const studentSchema = mongoose.Schema(
         DOB:{
             type:String,
             required:true
+        },
+        status:{
+            type:String,
+            required:true
+        },
+        lastentry:{
+            type:Date
+        },
+        history:{
+            type:Array,
+            default:[]
         }
     }
 )

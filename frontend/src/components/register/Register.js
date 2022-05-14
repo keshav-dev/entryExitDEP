@@ -33,6 +33,8 @@ const Register = ({onRegister}) => {
         try {
           const {data} = await axios.post("/api/users/register/password",{email,entryNumber:entryNo,password,otp},config);
           onRegister(data);
+          setShowPass(false);
+          history.push('/confirm')
         } catch (error) {
           setError(error.response.data.message);
           return;
@@ -40,8 +42,6 @@ const Register = ({onRegister}) => {
       }
 
       passwordChange();
-      setShowPass(false);
-      history.push('/confirm')
       return;
     }
 
@@ -49,6 +49,9 @@ const Register = ({onRegister}) => {
       const confirmOtp = async()=>{
         try {
           const {data} = await axios.post("/api/users/register/otp",{email,entryNumber:entryNo,password,otp},config);
+          setError(null);
+          setShowOtp(false);
+          setShowPass(true);
           //onRegister(data);
         } catch (error) {
           setError(error.response.data.message)
@@ -57,8 +60,6 @@ const Register = ({onRegister}) => {
         }
       }
       confirmOtp()
-      setShowOtp(false);
-      setShowPass(true);
       //history.push('/confirm')
       return;
     }
@@ -69,6 +70,7 @@ const Register = ({onRegister}) => {
         console.log(data);
         setPassword('');
         setShowOtp(true);
+        setError(null);
       } catch (error) {
         setError(error.response.data.message);
         console.log(error.message);

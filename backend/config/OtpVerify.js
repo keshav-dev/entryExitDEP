@@ -29,7 +29,8 @@ async function otplogin(emailId) {
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            throw new Error("something went wrong");
+            console.log(error);
+            throw new Error(error);
         }
     });
     return otp;

@@ -8,11 +8,23 @@ const registerStudent = asyncHandler(async (req,res)=>{
     // ask password, if password is that then alert them
     const {email,entryNumber,password} = req.body;
 
-    const student = await Student.findByCredentials(entryNumber,password,res);
+    const student = await Student.findOne({email});
+
+    if(!student){
+        res.status(400);
+        throw new Error("Such student does not exist");
+    }
 
     if(student.passwordSet==true){
         res.status(400);
         throw new Error("you have already registered");
+    }
+
+    if(student.DOB!==password){
+        // console.log(password);
+        // console.log(student.DOB);
+        res.status(400);
+        throw new Error("Wrong password!");
     }
 
     const otp = await otplogin(email);
@@ -81,6 +93,14 @@ const loginStudent = asyncHandler(async(req,res)=>{
     res.status(201).json(student);
 })
 
+const getStudentInfo = asyncHandler(async(req,res)=>{
+    const {studentId} = req.body;
+    // console.log(studentId);
+    const student = await Student.findById(studentId);
+    // console.log(student);
+    res.status(200).json(student);
+})
 
 
-module.exports = {registerStudent,confirmOtp,passwordChange,loginStudent};
+
+module.exports = {registerStudent,confirmOtp,passwordChange,loginStudent,getStudentInfo};
